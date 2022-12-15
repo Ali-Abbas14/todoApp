@@ -1,14 +1,14 @@
 import React from "react"
 import plusSign from "./assets/images/plus-sign.svg"
 import deleteButton from "./assets/images/delete.svg"
-import { useDispatch,useSelector } from "react-redux"
-import { useState,useRef } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useState, useRef } from "react"
 import { addToDo, deleteToDo, editTodo } from "./reducers/toDoSlice"
 
 function App() {
-  // const [inputValue,setInputValue] = useState(null)
-  const inputRef = useRef()
-  const dispatch = useDispatch()
+    // const [inputValue,setInputValue] = useState(null)
+    const inputRef = useRef()
+    const dispatch = useDispatch()
     const [state, setState] = useState({
         value: ""
     })
@@ -19,11 +19,10 @@ function App() {
         })
     }
     const handleClick = (e) => {
-      console.log(dispatch(addToDo({value: inputRef.current.value})))
-      setState({
-        value: inputRef.current.value = ""
-      }
-      )
+        dispatch(addToDo({ value: inputRef.current.value }))
+        setState({
+            value: (inputRef.current.value = "")
+        })
     }
     const { todoList } = useSelector((state) => state.toDo)
     return (
@@ -64,7 +63,7 @@ function App() {
                             Create a new task
                         </h2>
                         <span className="text-white font-Poppins text-base font-normal leading-4 py-1 px-[10px] rounded-md task-calculator">
-                            0
+                            {todoList.length}
                         </span>
                     </div>
                     <div className="mt-[44px] flex space-x-4 justify-left items-center">
@@ -77,14 +76,12 @@ function App() {
                     </div>
                 </div>
 
-                {todoList?.map(({ value, id }) => {
-                  console.log(todoList,"TODO")
-                  console.log(id)
-                  return (
-                <div className="bg-gray-800 max-w-[648px] mt-8 flex mx-auto" key={id}>
-                        <div
-                            className="flex justify-between w-full px-4"
-                        >
+                {todoList.map(({ value, id }) => (
+                    <div
+                        className="bg-gray-800 max-w-[648px] mt-8 flex mx-auto"
+                        key={id}
+                    >
+                        <div className="flex justify-between w-full px-4">
                             <input
                                 type="radio"
                                 className="radio1 w-[24px] h-[24px] my-[16px]"
@@ -96,14 +93,12 @@ function App() {
                                     {value.value}
                                 </p>
                             </div>
-                            <button onClick={()=> dispatch(deleteToDo(id))}>
+                            <button onClick={() => dispatch(deleteToDo(id))}>
                                 <img src={deleteButton} />
                             </button>
                         </div>
-                        </div>
-                      )
-                      }
-                        ) } 
+                    </div>
+                ))}
             </div>
         </>
     )
