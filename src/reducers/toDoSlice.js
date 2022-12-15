@@ -14,8 +14,8 @@ export const toDoSlice = createSlice({
         state.todoList.push(newToDoList)
         },
         deleteToDo: (state,action) => {
-            let {todoList} = state
-            state = todoList.filter((item) => item.id !== action.payload.id)
+            let { todoList } = state
+            state = todoList.filter((item) => item.id === action.payload.id)
         },
         editToDo: (state,action) => {
             let {todoList} = state
