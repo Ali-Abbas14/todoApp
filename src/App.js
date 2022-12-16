@@ -6,7 +6,7 @@ import { useState, useRef } from "react"
 import { addToDo, deleteToDo, editTodo } from "./reducers/toDoSlice"
 
 function App() {
-    // const [inputValue,setInputValue] = useState(null)
+    const [isActive, setActive] = useState(false)
     const inputRef = useRef()
     const dispatch = useDispatch()
     const [state, setState] = useState({
@@ -25,23 +25,27 @@ function App() {
         })
     }
     const { todoList } = useSelector((state) => state.toDo)
+    const handleDelete = () => {
+        dispatch(deleteToDo(todoList.filter((item)=> item)))
+        setActive(!isActive)
+    }
     return (
         <>
-            <div className="main bg-gray-900 h-[100vh]">
+            <div className="main bg-gray-900 h-[100vh] ">
                 <div className="text-center bg-gray-800">
                     <h2 className="todo-header-text font-Poppins font-semibold text-[56px] leading-[100%] py-[82px]">
                         Todo App
                     </h2>
                 </div>
                 <div className="">
-                    <form className="mt-[50px] flex flex-row space-x-4 justify-center">
+                    <form className="mt-[50px] flex flex-row space-x-4 justify-center ">
                         <input
                             ref={inputRef}
                             type="text"
                             placeholder="Add tasks"
                             required
                             onChange={handleChange}
-                            className="bg-gray-900 w-[488px] py-3 pl-4 border-[1px] border-[#4B5563] rounded-lg text-gray-300"
+                            className="bg-gray-900 w-[488px] py-3 pl-4 border-[1px] border-[#4B5563] rounded-lg text-gray-300 task-input"
                         />
                         <button
                             type="button"
@@ -75,10 +79,9 @@ function App() {
                         </span>
                     </div>
                 </div>
-
                 {todoList.map(({ value, id }) => (
                     <div
-                        className="bg-gray-800 max-w-[648px] mt-8 flex mx-auto"
+                        className="bg-gray-800 max-w-[648px] mt-8 flex mx-auto rounded"
                         key={id}
                     >
                         <div className="flex justify-between w-full px-4">
@@ -93,12 +96,33 @@ function App() {
                                     {value.value}
                                 </p>
                             </div>
-                            <button onClick={() => dispatch(deleteToDo(id))}>
+                            <button onClick={() => setActive(!isActive)}>
                                 <img src={deleteButton} />
                             </button>
                         </div>
                     </div>
                 ))}
+                <div className={`${isActive ? 'flex modal-toggler' : 'hidden'} justify-center relative`}>
+                    <div className="delete-modal flex flex-col bg-[#1F2937] rounded-xl w-[516px] px-6 h-[175px] absolute top-[50%]">
+                        <div className="">
+                            <h2 className="font-manrope text-xl leading-5 pt-6 text-white font-semibold">
+                                Delete Task
+                            </h2>
+                            <p className="pb-8 text-white font-Manrope text-sm leading-[21px] pt-4 font-normal">
+                                `Are you sure you want to delete task $
+                                {todoList.value}?`
+                            </p>
+                        </div>
+                        <div className="action-buttons inline-block space-x-4 text-right pb-6 max-w-[468px]">
+                            <button className="bg-transparent border-[1px] border-white rounded-md px-4 py-3 font-Manrope text-white leading-[100%] text-sm font-semibold" onClick={()=> setActive(!isActive)}>
+                                Cancel
+                            </button>
+                            <button className="bg-[#E11D48] rounded-md px-4 py-3 text-white font-Manrope leading-[100%] text-sm font-semibold" onClick={handleDelete}>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )
